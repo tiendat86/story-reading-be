@@ -3,11 +3,9 @@ package com.storyreadingbe.service;
 import com.storyreadingbe.dto.response.BookResponseDTO;
 import com.storyreadingbe.dto.response.BookshelfResponseDTO;
 import com.storyreadingbe.entity.Book;
+import com.storyreadingbe.entity.BookCategory;
 import com.storyreadingbe.entity.Bookshelf;
-import com.storyreadingbe.repository.AuthorRepository;
-import com.storyreadingbe.repository.BookRepository;
-import com.storyreadingbe.repository.ChapterRespository;
-import com.storyreadingbe.repository.BookshelfRepository;
+import com.storyreadingbe.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +28,10 @@ public class BookshelfServiceImpl {
     @Autowired
     private ChapterRespository chapterRespository;
     @Autowired
+    private BookCategoryRepository bookCategoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     ModelMapper modelMapper;
 
     public List<BookResponseDTO> getHistoryBookByUser(String username) {
@@ -42,6 +44,12 @@ public class BookshelfServiceImpl {
                 dto.setPseudonym(authorRepository.findById(book.getIdAuthor()).get().getPseudonym());
                 dto.setNumChapter(chapterRespository.countAllByIdBook(book.getId()));
                 dto.setIdChapterLastRead(bookshelf.getReading());
+                List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(book.getId());
+                List<String> categories = new ArrayList<>();
+                cates.forEach(bookCategory -> {
+                    categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+                });
+                dto.setCategories(categories);
                 res.add(dto);
             });
             return res;
@@ -60,6 +68,12 @@ public class BookshelfServiceImpl {
                 dto.setPseudonym(authorRepository.findById(book.getIdAuthor()).get().getPseudonym());
                 dto.setNumChapter(chapterRespository.countAllByIdBook(book.getId()));
                 dto.setIdChapterLastRead(bookshelf.getReading());
+                List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(book.getId());
+                List<String> categories = new ArrayList<>();
+                cates.forEach(bookCategory -> {
+                    categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+                });
+                dto.setCategories(categories);
                 res.add(dto);
             });
             return res;

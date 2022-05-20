@@ -4,12 +4,10 @@ import com.storyreadingbe.dto.common.BookLastUpdateDTO;
 import com.storyreadingbe.dto.response.BookDetailResponseDTO;
 import com.storyreadingbe.dto.response.BookResponseDTO;
 import com.storyreadingbe.entity.Book;
+import com.storyreadingbe.entity.BookCategory;
 import com.storyreadingbe.entity.Bookshelf;
 import com.storyreadingbe.entity.Chapter;
-import com.storyreadingbe.repository.AuthorRepository;
-import com.storyreadingbe.repository.BookRepository;
-import com.storyreadingbe.repository.BookshelfRepository;
-import com.storyreadingbe.repository.ChapterRespository;
+import com.storyreadingbe.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +32,10 @@ public class BookServiceImpl {
     @Autowired
     private BookshelfRepository bookshelfRepository;
     @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private BookCategoryRepository bookCategoryRepository;
+    @Autowired
     private ModelMapper modelMapper;
 
     public BookResponseDTO getBookById(Integer id) {
@@ -42,6 +44,12 @@ public class BookServiceImpl {
             BookResponseDTO dto = modelMapper.map(book, BookResponseDTO.class);
             dto.setPseudonym(authorRepository.findById(book.getIdAuthor()).get().getPseudonym());
             dto.setNumChapter(chapterRespository.countAllByIdBook(id));
+            List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(id);
+            List<String> categories = new ArrayList<>();
+            cates.forEach(bookCategory -> {
+               categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+            });
+            dto.setCategories(categories);
             return dto;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Can't get book by id = " + id);
@@ -70,9 +78,14 @@ public class BookServiceImpl {
         List<Book> books = bookRepository.getBookByKey(param, param);
         books.forEach(book -> {
             BookResponseDTO dto = getBookById(book.getId());
+            List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(book.getId());
+            List<String> categories = new ArrayList<>();
+            cates.forEach(bookCategory -> {
+                categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+            });
+            dto.setCategories(categories);
             res.add(dto);
         });
-        System.out.println(66666);
         return res;
     }
 
@@ -90,6 +103,12 @@ public class BookServiceImpl {
             List<BookLastUpdateDTO> list = chapterRespository.getLastBookUpdate().stream().limit(limit).collect(Collectors.toList());
             list.forEach(bookLastUpdateDTO -> {
                 BookResponseDTO dto = getBookById(bookLastUpdateDTO.getIdBook());
+                List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(bookLastUpdateDTO.getIdBook());
+                List<String> categories = new ArrayList<>();
+                cates.forEach(bookCategory -> {
+                    categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+                });
+                dto.setCategories(categories);
                 res.add(dto);
             });
             return res;
@@ -108,6 +127,11 @@ public class BookServiceImpl {
                     .collect(Collectors.toList());
             list.forEach(bookLastUpdateDTO -> {
                 BookResponseDTO dto = getBookById(bookLastUpdateDTO.getIdBook());
+                List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(bookLastUpdateDTO.getIdBook());
+                List<String> categories = new ArrayList<>();
+                cates.forEach(bookCategory -> {
+                    categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+                });
                 res.add(dto);
             });
             return res;
@@ -126,6 +150,11 @@ public class BookServiceImpl {
                     .collect(Collectors.toList());
             list.forEach(bookLastUpdateDTO -> {
                 BookResponseDTO dto = getBookById(bookLastUpdateDTO.getIdBook());
+                List<BookCategory> cates = bookCategoryRepository.findAllByIdBook(bookLastUpdateDTO.getIdBook());
+                List<String> categories = new ArrayList<>();
+                cates.forEach(bookCategory -> {
+                    categories.add(categoryRepository.findById(bookCategory.getIdCategory()).get().getName());
+                });
                 res.add(dto);
             });
             return res;

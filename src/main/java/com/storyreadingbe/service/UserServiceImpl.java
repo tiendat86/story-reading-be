@@ -2,6 +2,7 @@ package com.storyreadingbe.service;
 
 import com.storyreadingbe.dto.request.UserDetailDTO;
 import com.storyreadingbe.dto.response.BookResponseDTO;
+import com.storyreadingbe.dto.response.UserResponseDTO;
 import com.storyreadingbe.entity.User;
 import com.storyreadingbe.repository.BookRepository;
 import com.storyreadingbe.repository.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,21 +33,23 @@ public class UserServiceImpl {
     BookRepository bookRepository;
     @Autowired
     ModelMapper modelMapper;
-    
+
     public void register(User user) {
-        try {
+        Optional optional = userRepository.findById(user.getUsername());
+        if (optional.isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-        } catch (Exception e) {
+        } else {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Can't register");
         }
     }
-    
-    public User login(String username, String password) {
+
+    public UserResponseDTO login(String username, String password) {
         try {
             User user = userRepository.findById(username).get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
+                UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
+                return dto;
             }
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Error username");

@@ -5,21 +5,15 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "book_category")
 @Data
-public class Comment {
+public class BookCategory {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "rating")
-    private Integer rating;
-    @Column(name = "comment")
-    private String comment;
-    @Column(name = "time")
-    private String time;
-    @Column(name = "id_user")
-    private String idUser;
     @Column(name = "id_book")
     private Integer idBook;
+    @Column(name = "id_category")
+    private Integer idCategory;
 }

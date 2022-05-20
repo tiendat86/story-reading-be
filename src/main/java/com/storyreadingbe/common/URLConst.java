@@ -21,6 +21,7 @@ public class URLConst {
         public static final String GET_BOOK_LAST_UPDATE_COMPLETE = GET_BOOK + "/last-update-complete";
         public static final String GET_BOOK_LAST_UPDATE_NOT_COMPLETE = GET_BOOK + "/last-update-not-complete";
         public static final String DETAIL_CHAPTER =  "/user/chapter/detail";
+        public static final String ALL_REVIEW = GET_BOOK + "/review";
     }
 
     public class Author {
@@ -33,5 +34,6 @@ public class URLConst {
         public static final String REMOVE_BOOKSHELF = "/bookshelf/remove";
         public static final String UPDATE_STATUS_READ =  "/bookshelf/update-status";
         public static final String DETAIL_CHAPTER_USER =  "/chapter/detail";
+        public static final String CREATE_REVIEW_BOOK = "/book/create-review";
     }
 }
