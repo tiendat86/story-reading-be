@@ -28,7 +28,9 @@ public class ReviewServiceImpl {
 
     public void createReview(String content, String rating, String username, Integer idBook) {
         try {
-            Review review = new Review();
+            Review review = reviewRepository.findReviewByUsernameAndIdBook(username, idBook);
+            if (review == null)
+                review = new Review();
             review.setContent(content);
             review.setRating(rating);
             review.setUsername(username);

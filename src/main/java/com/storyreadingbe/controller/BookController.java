@@ -2,6 +2,7 @@ package com.storyreadingbe.controller;
 
 import com.storyreadingbe.common.URLConst;
 import com.storyreadingbe.dto.common.BookLastUpdateDTO;
+import com.storyreadingbe.dto.request.SearchFilterDTO;
 import com.storyreadingbe.dto.response.BookDetailResponseDTO;
 import com.storyreadingbe.dto.response.BookResponseDTO;
 import com.storyreadingbe.entity.Book;
@@ -58,5 +59,10 @@ public class BookController {
     @GetMapping(value = URLConst.User.GET_BOOK_LAST_UPDATE_NOT_COMPLETE)
     public List<BookResponseDTO> sortBookByDateNotComplete() {
         return bookService.sortBookByDateNotComplete(limit);
+    }
+    
+    @PostMapping(URLConst.User.SEARCH_BOOK_FILTER)
+    public List<BookResponseDTO> filterBook(@ModelAttribute SearchFilterDTO searchFilterDTO) {
+        return bookService.filterBook(searchFilterDTO);
     }
 }

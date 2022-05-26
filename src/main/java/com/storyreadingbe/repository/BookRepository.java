@@ -21,4 +21,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             "ORDER BY RAND() " +
             "LIMIT ?", nativeQuery = true)
     List<Book> getRandomLimitBook(Integer limit);
+    
+    List<Book> findAllByNameContainsAndComplete(String name, Boolean complete);
+    List<Book> findByNameContains(String name);
+
+    List<Book> findAllByComplete(Boolean complete);
 }

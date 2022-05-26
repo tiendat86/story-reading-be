@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
     List<Review> findAllByIdBook(Integer idBook);
+    Review findReviewByUsernameAndIdBook(String username, Integer idBook);
 }

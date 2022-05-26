@@ -7,9 +7,10 @@ import com.storyreadingbe.dto.response.UserResponseDTO;
 import com.storyreadingbe.entity.User;
 import com.storyreadingbe.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class UserController {
@@ -29,5 +30,11 @@ public class UserController {
     @PostMapping(value = URLConst.CREATE_USER_DETAIL)
     public void createUserDetail(@ModelAttribute UserDetailDTO dto) {
         userService.createUser(dto);
+    }
+    
+    @PostMapping(value = URLConst.Author.CHANGE_AVATAR)
+    public UserResponseDTO changeAvatar(@RequestParam("username") String username,
+                                     @RequestPart("image") MultipartFile image) {
+        return userService.changeAvatar(username, image);
     }
 }

@@ -1,25 +1,19 @@
 package com.storyreadingbe.service;
 
 import com.storyreadingbe.dto.request.UserDetailDTO;
-import com.storyreadingbe.dto.response.BookResponseDTO;
 import com.storyreadingbe.dto.response.UserResponseDTO;
 import com.storyreadingbe.entity.User;
 import com.storyreadingbe.repository.BookRepository;
 import com.storyreadingbe.repository.UserRepository;
-import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +25,8 @@ public class UserServiceImpl {
     UserRepository userRepository;
     @Autowired
     BookRepository bookRepository;
+    @Autowired
+    AmazonS3ServiceImpl amazonS3Service;
     @Autowired
     ModelMapper modelMapper;
 
@@ -64,5 +60,17 @@ public class UserServiceImpl {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Error save");
         }
+    }
+
+    public UserResponseDTO changeAvatar(String username, MultipartFile multipartFile) {
+        String urlImg = amazonS3Service.uploadFileUrl(multipartFile);
+        User user = userRepository.findById(username).get();
+        if (urlImg.equals("")) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Something went wrong");
+        }
+        user.setUrlImg(urlImg);
+        userRepository.save(user);
+        UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
+        return dto;
     }
 }

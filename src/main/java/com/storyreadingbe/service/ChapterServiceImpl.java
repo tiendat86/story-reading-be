@@ -112,4 +112,13 @@ public class ChapterServiceImpl {
         dto.setNumChapter(chapterRespository.countAllByIdBook(idBook));
         return dto;
     }
+
+    public List<Chapter> getAllChapter(Integer idBook) {
+        try {
+            List<Chapter> res = chapterRespository.findAllByIdBook(idBook);
+            return res;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Something went wrong");
+        }
+    }
 }

@@ -60,4 +60,9 @@ public class ChapterController {
     public ChapterDetailResponseDTO getDetailChapter(@PathVariable Integer idBook) {
         return chapterService.getDetailChapter(idBook);
     }
+    
+    @GetMapping(value = URLConst.User.ALL_CHAPTER + "/{idBook}")
+    public List<Chapter> getAllChapter(@PathVariable Integer idBook) {
+        return chapterService.getAllChapter(idBook);
+    }
 }

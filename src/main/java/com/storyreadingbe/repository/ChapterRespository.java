@@ -21,7 +21,7 @@ public interface ChapterRespository extends JpaRepository<Chapter, Integer> {
             "FROM Chapter c " +
             "GROUP BY c.idBook " +
             "ORDER BY MAX(c.time) DESC")
-    List<BookLastUpdateDTO> getLastBookUpdate();
+    List<BookLastUpdateDTO>     getLastBookUpdate();
 
     @Query(value = "SELECT MIN(id) FROM storyreading.chapter " +
             "WHERE id_book = ?", nativeQuery = true)
@@ -40,4 +40,10 @@ public interface ChapterRespository extends JpaRepository<Chapter, Integer> {
             "ORDER BY id DESC " +
             "LIMIT 1", nativeQuery = true)
     Chapter getLastChapter(Integer idBook, Integer idChapter);
+    
+    @Query(value = "SELECT * FROM storyreading.chapter " +
+            "WHERE id_book = ? " +
+            "ORDER BY id DESC " +
+            "LIMIT 1", nativeQuery = true)
+    Chapter getNewChapterByBook(Integer idBook);
 }
